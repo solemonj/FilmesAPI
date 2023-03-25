@@ -4,6 +4,8 @@ namespace FilmesAPI.Models
 {
     public class Filme
     {
+        public int Id { get; set; }
+
         [Required (ErrorMessage ="O filme deve possuir um nome")]
         [MaxLength(60,ErrorMessage ="O nome do filme está muito grande")]
         [MinLength(3, ErrorMessage = "O nome do filme não deve ser tão pequeno")]
