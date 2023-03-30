@@ -12,7 +12,6 @@ namespace FilmesAPI.Data
         //faz a passagem para o construtor "base" = dbcontext
         public FilmeContext(DbContextOptions<FilmeContext> opts) : base(opts)
         {
-            
         }
 
         //cria uma propriedade de acesso para dar acesso aos filmes que teremos na base
