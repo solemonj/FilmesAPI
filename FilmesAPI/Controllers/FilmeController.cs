@@ -14,12 +14,13 @@ namespace FilmesAPI.Controllers
         //[FromBody] -> especifica que parametro do Post vem através do corpo da requisição
         //Inserção de recursos no sistema
         [HttpPost]
-        public void AdicionaFilme([FromBody] Filme filme)
+        public IActionResult AdicionaFilme([FromBody] Filme filme)
         {
             filme.Id = id++;
             filmes.Add(filme);
-            Console.WriteLine(filme.Titulo);
-            Console.WriteLine(filme.Duracao);
+            //retorna o objeto criado para o usuário e informa qual caminho é possivel encontrar
+            return CreatedAtAction(nameof(RecuperaFilmePorId), 
+                new {id = filme.Id}, filme);
         }
 
         //Leitura de todos os filmes do sistema
@@ -32,9 +33,12 @@ namespace FilmesAPI.Controllers
 
         //recuperacao de um filme unico atraves do id passado no getF
         [HttpGet("{id}")]
-        public Filme? RecuperaFilmePorId(int id)
+        public IActionResult RecuperaFilmePorId(int id)
         {
-            return filmes.FirstOrDefault(filme => filme.Id == id);
+            var filme = filmes.FirstOrDefault(filme => filme.Id == id);
+            if (filme == null) return NotFound();
+            return Ok(filme);
+        
         }
     }
 }
