@@ -1,4 +1,6 @@
-﻿using FilmesAPI.Data;
+﻿using AutoMapper;
+using FilmesAPI.Data;
+using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;//
 using Microsoft.AspNetCore.Mvc;//
 using Microsoft.EntityFrameworkCore;
@@ -11,17 +13,20 @@ namespace FilmesAPI.Controllers
     {
         //injeção de dependencia
         private FilmeContext _context;
+        private IMapper _mapper;
 
-        public FilmeController(FilmeContext context)
+        public FilmeController(FilmeContext context, IMapper mapper)
         {
             _context = context; //instância do contexto
+            _mapper = mapper;
         }
 
         //[FromBody] -> especifica que parametro do Post vem através do corpo da requisição
         //Inserção de recursos no sistema
         [HttpPost]
-        public IActionResult AdicionaFilme([FromBody] Filme filme)
+        public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
         {
+            Filme filme = _mapper.Map<Filme>(filmeDto);
             _context.Filmes.Add(filme);
             _context.SaveChanges();
             //retorna o objeto criado para o usuário e informa qual caminho é possivel encontrar

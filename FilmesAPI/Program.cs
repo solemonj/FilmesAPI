@@ -8,6 +8,9 @@ var connectionString = builder.Configuration.GetConnectionString("FilmeConnectio
 builder.Services.AddDbContext<FilmeContext>(opts => 
 opts.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+// utiliza o builder para adicionar automapper e poder utilizar ela na aplicação
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 // Add services to the container.
 
 builder.Services.AddControllers();
