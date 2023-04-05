@@ -30,14 +30,14 @@ namespace FilmesAPI.Controllers
             _context.Filmes.Add(filme);
             _context.SaveChanges();
             //retorna o objeto criado para o usuário e informa qual caminho é possivel encontrar
-            return CreatedAtAction(nameof(RecuperaFilmePorId), 
-                new {id = filme.Id}, filme);
+            return CreatedAtAction(nameof(RecuperaFilmePorId),
+                new { id = filme.Id }, filme);
         }
 
         //Leitura de todos os filmes do sistema
         [HttpGet]
         public IEnumerable<Filme> RecuperaFilmes(
-            [FromQuery] int skip = 0,[FromQuery] int take = 50)
+            [FromQuery] int skip = 0, [FromQuery] int take = 50)
         {
             return _context.Filmes.Skip(skip).Take(take);
         }
@@ -49,7 +49,18 @@ namespace FilmesAPI.Controllers
             var filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
             if (filme == null) return NotFound();
             return Ok(filme);
-        
+
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult AtualizaFilme(int id, [FromBody] UpdateFilmeDto filmeDto)
+        {
+            var filme = _context.Filmes.FirstOrDefault(
+                filme => filme.Id == id);
+            if (filme == null) return NotFound();
+            _mapper.Map(filmeDto, filme);
+            _context.SaveChanges();
+            return NoContent();
         }
     }
 }
