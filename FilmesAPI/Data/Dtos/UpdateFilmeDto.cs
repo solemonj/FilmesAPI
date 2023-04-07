@@ -2,7 +2,7 @@
 
 namespace FilmesAPI.Data.Dtos
 {
-    public class CreateFilmeDto
+    public class UpdateFilmeDto
     {
         [Required(ErrorMessage = "O filme deve possuir um nome")]
         [StringLength(60, ErrorMessage = "O nome do filme está muito grande")]
