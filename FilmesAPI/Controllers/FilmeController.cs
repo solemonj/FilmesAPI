@@ -37,10 +37,10 @@ namespace FilmesAPI.Controllers
 
         //Leitura de todos os filmes do sistema
         [HttpGet]
-        public IEnumerable<Filme> RecuperaFilmes(
+        public IEnumerable<ReadFilmeDto> RecuperaFilmes(
             [FromQuery] int skip = 0, [FromQuery] int take = 50)
         {
-            return _context.Filmes.Skip(skip).Take(take);
+            return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take));
         }
 
         //recuperacao de um filme unico atraves do id passado no getF
@@ -49,8 +49,8 @@ namespace FilmesAPI.Controllers
         {
             var filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
             if (filme == null) return NotFound();
-            return Ok(filme);
-
+            var filmeDto = _mapper.Map<ReadFilmeDto>(filme);
+            return Ok(filmeDto);
         }
 
         //Faz alterações de filmes passando todo o objeto
@@ -77,16 +77,25 @@ namespace FilmesAPI.Controllers
             var filme = _context.Filmes.FirstOrDefault(
                 filme => filme.Id == id);
             if (filme == null) return NotFound();
-
             var filmeParaAtualizar = _mapper.Map<UpdateFilmeDto>(filme);
             patch.ApplyTo(filmeParaAtualizar, ModelState);
-
             if (!TryValidateModel(filmeParaAtualizar))
             {
                 return ValidationProblem(ModelState);
             }
-
             _mapper.Map(filmeParaAtualizar, filme);
+            _context.SaveChanges();
+            return NoContent();
+        }
+
+        //Deleção
+        [HttpDelete("{id}")]
+        public IActionResult DeletaFilme(int id)
+        {
+            var filme = _context.Filmes.FirstOrDefault(
+                filme => filme.Id == id);
+            if (filme == null) return NotFound();
+            _context.Remove(filme);
             _context.SaveChanges();
             return NoContent();
         }
